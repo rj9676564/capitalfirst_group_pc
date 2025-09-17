@@ -23,6 +23,12 @@
           <img src="@/assets/imgs/order-1.png" alt="" class="icon-1" />
           <span>{{$t('kyc.order')}}</span>
         </router-link>
+        
+        <router-link to="/kyc/user_assets" class="link-item">
+          <img src="@/assets/imgs/user_assets.png" alt="" class="icon" />
+          <img src="@/assets/imgs/user_assets-1.png" alt="" class="icon-1" />
+          <span>{{$t('assets.title')}}</span>
+        </router-link>
         <router-link to="/kyc/about" class="link-item">
           <img src="@/assets/imgs/team.png" alt="" class="icon" />
           <img src="@/assets/imgs/team-1.png" alt="" class="icon-1" />

@@ -31,15 +31,6 @@
         </div>
       </div>
     </div>
-    <RecaptchaV2
-      :sitekey="REACT_APP_RECAPTCHA_SITE_KEY"
-      size="invisible"
-      ref="recaptcha"
-      @widget-id="handleWidgetId"
-      @error-callback="handleErrorCallback"
-      @expired-callback="handleExpiredCallback"
-      @load-callback="handleLoadCallback"
-    />
   </div>
 </template>
 
@@ -47,12 +38,9 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { sendGoogleSms, changePwd, verifyGoogleMsg, sendCodeForgot } from '@/api'
+import { changePwd, sendCodeForgot } from '@/api'
 import { useI18n } from 'vue-i18n'
-import { RecaptchaV2, useRecaptcha } from 'vue3-recaptcha-v2'
-import { REACT_APP_RECAPTCHA_SITE_KEY } from '@/config'
 
-const { handleExecute } = useRecaptcha()
 const { t } = useI18n()
 const name = ref('')
 const password = ref('')
@@ -60,41 +48,10 @@ const password1 = ref('')
 const code = ref('')
 const routers = useRouter()
 const txt = ref(t('login.code'))
-const recaptcha = ref(null) // 引用 reCAPTCHA 组件
-let widgetId = ref(null)
-const recaptchaResponse = ref()
 let loading = false
 let isSend = ref(false)
 const ereg = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
 
-const handleWidgetId = (tmpWidgetId) => {
-  console.log('Widget ID: ', tmpWidgetId)
-  widgetId.value = tmpWidgetId
-}
-const handleErrorCallback = () => {
-  console.log('Error callback')
-}
-const handleExpiredCallback = () => {
-  console.log('Expired callback')
-}
-const sessionInfo = ref(null)
-const handleLoadCallback = async (response) => {
-  console.log('Load callback', response)
-  recaptchaResponse.value = response
-  if (recaptchaResponse.value != null) {
-    // 发送验证码
-    sendGoogleSms({
-      phoneNumber: '+86' + name.value,
-      recaptchaToken: recaptchaResponse.value,
-      type: 'forget'
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        sessionInfo.value = data.sessionInfo
-        startCountdown()
-      })
-  }
-}
 
 function startCountdown() {
   ElMessage({
@@ -121,27 +78,12 @@ function getCode() {
       type: 'error'
     })
   }
-  // handleExecute(widgetId.value)
   if (isSend.value) return
   isSend.value = true
   sendCodeForgot({ account: name.value, mobile: name.value })
     .then((res) => {
       if (res.code === 200) {
-        ElMessage({
-          message: t('login.send'),
-          type: 'success'
-        })
-        let time = 60
-        txt.value = time + 's'
-        const timer = setInterval(() => {
-          time--
-          txt.value = time + 's'
-          if (time == 0) {
-            clearInterval(timer)
-            txt.value = t('login.code')
-            isSend.value = false
-          }
-        }, 1000)
+        startCountdown()
       } else {
         isSend.value = false
       }
@@ -149,40 +91,8 @@ function getCode() {
     .catch(() => (isSend.value = false))
 }
 
-const handleVerify = async () => {
-  if (!code.value) {
-    return ElMessage({
-      message: t('login.sryzm'),
-      type: 'error'
-    })
-  }
-  verifyGoogleMsg({
-    sessionInfo: sessionInfo.value,
-    code: code.value
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.idToken) {
-        changeFunc()
-      } else {
-        return false
-      }
-    })
-}
 
 async function confirm() {
-  // if (widgetId.value == null) {
-  //   return ElMessage({
-  //     message: '请等待人机验证',
-  //     type: 'error'
-  //   })
-  // }
-  // if (recaptchaResponse.value == null) {
-  //   return ElMessage({
-  //     message: '请等待人机验证结果',
-  //     type: 'error'
-  //   })
-  // }
   if (!name.value) {
     return ElMessage({
       message: t('login.srsjh'),
@@ -213,7 +123,7 @@ async function confirm() {
       type: 'error'
     })
   }
-  handleVerify()
+  changeFunc()
 }
 
 function changeFunc(){

@@ -35,6 +35,7 @@ export default {
     date:"Listing Date",
     intro:"Introduction",
     buy:"BUY",
+    sell:"SELL",
     srsl:"Please enter the quantity purchased",
     srzfmm:"Please enter pay password",
     cancel:"Cancel",
@@ -89,7 +90,7 @@ export default {
     nc:"Name/Code",
     pq:"Price/Quantity",
     zt:"Status",
-    cz:"Operate",
+    operate:"Operate",
     jxz:"Ongoing",
     ywc:"Finished",
     sell:"Agency"
@@ -127,5 +128,25 @@ export default {
     ysxy:"Privacy Agreement",
     wyzx:"I already know",
     warn:"Note: All payment progress matters will be notified by email. Please check your email carefully"
+  },
+  assets:{
+    title:"User Assets",
+    totalAssets:"Total Assets",
+    availableBalance:"Available Balance",
+    frozenAmount:"Frozen Amount",
+    orderList:"Order List",
+    orderId:"Order ID",
+    productName:"Product Name",
+    englishName:"English Name",
+    code:"Code",
+    quantity:"Quantity",
+    price:"Price",
+    status:"Status",
+    statusBuying:"Buying",
+    statusSelling:"Selling",
+    recharge:"Recharge",
+    withdraw:"Withdraw",
+    orderManage:"Order Management",
+    market:"Market"
   }
 }

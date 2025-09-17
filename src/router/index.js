@@ -1,5 +1,4 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import i18n from '@/locals'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -53,7 +52,8 @@ const router = createRouter({
           path: 'market',
           component: ()=>import('@/views/market.vue'),
           meta:{title:'Home'}
-        }
+        },
+     
       ]
     },
     {
@@ -104,6 +104,11 @@ const router = createRouter({
           path: 'collet',
           component: ()=>import('@/views/collet.vue'),
           meta:{title:'collet'},
+        },
+        {
+          path: 'user_assets',
+          component: ()=>import('@/views/user_assets.vue'),
+          meta:{title:'user_assets'},
         }
       ]
     }

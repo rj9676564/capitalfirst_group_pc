@@ -34,6 +34,7 @@ export default {
     date: "上市日期",
     intro: "介绍",
     buy: "购买",
+    sell: "卖出",
     srsl: "请输入购买数量",
     srzfmm: "请输入支付密码",
     cancel: "取消",
@@ -88,7 +89,7 @@ export default {
     nc: "姓名/代码",
     pq: "价格/数量",
     zt: "状态",
-    cz: "操作",
+    operate: "操作",
     jxz: "进行中",
     ywc: "完成",
     sell: "代售"
@@ -111,7 +112,7 @@ export default {
   tx: {
     title: "付款",
     tip: "输入金额",
-    tip1: '1. 只有可用金额可以提取，您可以查看“股票详情”查看可用余额。',
+    tip1: '1. 只有可用金额可以提取，您可以查看"股票详情"查看可用余额。',
     tip2: "2. 今日用于订单的资金只能在订单取消后提取。",
     tip3: "3. 提款时间：上午9:00 - 下午5:00（周一至周五美国时间）。",
     ye: "可用余额",
@@ -126,5 +127,25 @@ export default {
     ysxy:"隐私协议",
     wyzx:"我已知晓",
     warn:"备注:所有付款进程事项,会有邮件通知,注意查看邮件"
+  },
+  assets: {
+    title: "用户资产",
+    totalAssets: "总资产",
+    availableBalance: "可用余额",
+    frozenAmount: "冻结金额",
+    orderList: "订单列表",
+    orderId: "订单ID",
+    productName: "产品名称",
+    englishName: "英文名称",
+    code: "代码",
+    quantity: "数量",
+    price: "价格",
+    status: "状态",
+    statusBuying: "代购中",
+    statusSelling: "代售中",
+    recharge: "充值",
+    withdraw: "提现",
+    orderManage: "订单管理",
+    market: "市场"
   }
 }

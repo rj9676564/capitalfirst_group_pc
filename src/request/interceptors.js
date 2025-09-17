@@ -1,7 +1,24 @@
 import axios from 'axios';
- 
+
+// 获取API基础URL，支持多种环境
+const getBaseURL = () => {
+  // 优先使用环境变量
+  if (import.meta.env.VITE_BASE_URL) {
+    return import.meta.env.VITE_BASE_URL;
+  }
+  
+  // 根据当前环境判断
+  if (import.meta.env.PROD) {
+    // 生产环境使用固定域名
+    return 'https://ind.thecapitalfirst.com/';
+  } else {
+    // 开发环境使用代理路径
+    return '/v1';
+  }
+};
+
 const service = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL,
+  baseURL: getBaseURL(),
   withCredentials: true,
 });
  

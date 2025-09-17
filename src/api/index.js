@@ -22,6 +22,9 @@ export const userInfo = (params) => Request.post('/User/getUserInfo',params);
 //订单列表
 export const orderList = (params) => Request.post('/Product/getUserOrder',params);
 
+//用户订单列表
+export const getUserOrderlis = (params) => Request.post('/Product/getUserOrderlis',params);
+
 //积分奖励
 export const integral = (params) => Request.post('/User/myWpReward',params);
 
@@ -90,7 +93,8 @@ export const faqContent = (params) => Request.post('/Contact/faInfo',params);
 
 //订单卖出
 export const sellOrder = (params) => Request.post('/Product/confirmOrder',params);
-
+//确认订单
+export const confirmOrder = (params) => Request.post('/Product/confirmOrder',params);
 //隐私政策
 export const privacy = (params) => Request.post('/Login/regnews',params);
 

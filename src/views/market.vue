@@ -85,7 +85,7 @@
           <img src="@/assets/imgs/xin.png" alt="" @click="colletHand" />
           <div class="btn">
             <span class="buy" @click="visibili = true">{{ $t('home.buy') }}</span>
-            <!-- <span class="sell" @click="visibili = true">SELL</span> -->
+            <span v-if="canSell !== 0"  class="sell" @click="sellVisibili = true">{{ $t('home.sell') }}</span>
           </div>
         </div>
       </div>
@@ -99,8 +99,20 @@
       <input type="text" v-model="quantity" :placeholder="$t('home.srsl')" />
       <input type="password" v-model="pwd" :placeholder="$t('home.srzfmm')" />
       <div class="btn">
-        <span class="cancel">{{ $t('home.cancel') }}</span>
+        <span class="cancel" @click="visibili = false">{{ $t('home.cancel') }}</span>
         <span @click="submit">{{ $t('home.confirm') }}</span>
+      </div>
+    </div>
+  </el-dialog>
+  <el-dialog v-model="sellVisibili" width="400">
+    <div class="dia">
+      <div class="title">
+        {{ $t('home.sell') }} - {{ locale === 'en' ? info.name_en : info.name }} ({{ info.contribution_value }})
+      </div>
+      <input type="password" v-model="pwd" :placeholder="$t('home.srzfmm')" />
+      <div class="btn">
+        <span class="cancel" @click="sellVisibili = false">{{ $t('home.cancel') }}</span>
+        <span @click="sellHand">{{ $t('home.confirm') }}</span>
       </div>
     </div>
   </el-dialog>
@@ -108,12 +120,14 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { Chart, registerables } from 'chart.js'
-import { proList, proDetail, collet, pay, userInfo } from '@/api'
+import { proList, proDetail, collet, pay, userInfo, confirmOrder } from '@/api'
 import { useUserStore } from '@/store/user'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { ElMessage } from 'element-plus'
 const userStore = useUserStore()
 const visibili = ref(false)
+const sellVisibili = ref(false)
 const quantity = ref('')
 const list = ref([])
 const searchList = ref([])
@@ -122,6 +136,7 @@ const total = ref(0)
 const keyword = ref('')
 const pwd = ref('')
 const info = ref({})
+const canSell = ref(0) // 存储cansell值，0表示不能卖出，非0表示可以卖出
 const routers = useRouter()
 const { t, locale } = useI18n()
 Chart.register(...registerables)
@@ -207,6 +222,41 @@ function colletHand() {
   })
 }
 
+function sellHand() {
+  if (!pwd.value) {
+    return ElMessage({
+      message: t('home.srzfmm'),
+      type: 'error'
+    })
+  }
+  if (!userStore.users.safe_status) {
+    setTimeout(() => routers.push('/kyc/changePayPwd'))
+    return ElMessage({
+      message: t('home.szzfmm'),
+      type: 'error'
+    })
+  }
+  if (loading) return
+  loading = true
+  confirmOrder({ id: canSell.value }).then((res) => {
+    loading = false
+    sellVisibili.value = false
+    if (res.code === 200) {
+      ElMessage({
+        message: t('success'),
+        type: 'success'
+      })
+      pwd.value = ''
+      getUserInfo()
+    } else {
+      return ElMessage({
+        message: res.msg,
+        type: 'error'
+      })
+    }
+  })
+}
+
 let chartInstance = null
 const lineChart = ref(null)
 function drawKline(date, datas) {
@@ -268,6 +318,7 @@ function getDetail(id) {
   proDetail({ id }).then((res) => {
     if (res.code === 200) {
       info.value = res.data
+      canSell.value = res.data.cansell || 0 // 保存cansell值
       const dates = []
       const datas = []
       res.data.lineList.map((item) => dates.push(item.str_date))
